@@ -1,0 +1,32 @@
+ int networkDelayTime(vector<vector<int>>& times, int n, int k) {
+        
+        unordered_map<int,vector<pair<int,int>>> mp;
+        for(auto p:times){
+            mp[p[0]].push_back({p[1],p[2]});
+        }
+        
+        priority_queue<pair<int,int> , vector<pair<int,int>> ,greater<pair<int,int>>> pq;
+        vector<int> dist(n+1,100000);
+        dist[k]=0;
+        pq.push({0,k});
+        
+        while(!pq.empty()){
+            auto p1=pq.top();
+            pq.pop();
+            int w=p1.first;
+            int node=p1.second;
+            for(auto p:mp[node]){
+                if(dist[p.first]> w+p.second){
+                    dist[p.first]=w+p.second;
+                    pq.push({dist[p.first],p.first});
+                }
+            }
+        }
+        int mini=0;
+        for(int i=1;i<=n;i++){
+            mini=max(dist[i],mini);
+        }
+        if(mini==100000)return -1;
+        return mini;
+        
+    }
